@@ -2,8 +2,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+//class chứa thông tin của các phân vùng và tiến trình
 public class AllocateMemoryAlgorithm {
 
+    //mỗi phân vùng chứa thông tin về kích thước tối đa và kích thước đã cấp phát
     public class MemoryBlock {
         private int size;
         private int allocatedSize;
@@ -39,8 +41,11 @@ public class AllocateMemoryAlgorithm {
         
     }
 
+    //khai báo danh sách phân vùng - memory block
     private List<MemoryBlock> blocks;
+    //khai báo danh sách các tiến trình - process
     private List<Integer> processes;
+    //khai báo danh sách kết quả lưu kết quả việc cấp phát cho các tiến trình
     private List<String> outputs;
 
     public AllocateMemoryAlgorithm(){
@@ -49,6 +54,7 @@ public class AllocateMemoryAlgorithm {
         outputs = new ArrayList<>();
     }
 
+    //copy danh sách phân vùng để thực hiện các giải thuật mà không bị mất dữ liệu của các phân vùng
     public List<MemoryBlock> copyListBlocks(){
         List<MemoryBlock> res = new ArrayList<>();
         for (MemoryBlock memoryBlock : blocks) {
@@ -57,19 +63,21 @@ public class AllocateMemoryAlgorithm {
         return res;
     }
 
+    //nhập dữ liệu cho các phân vùng và tiến trình
     public void enter(){
 
         Scanner sc = new Scanner(System.in);
 
+        //nhập thông tin cho các phân vùng
         System.out.print("Enter number of block: ");
         int numberOfBlock = sc.nextInt();
         for(int i = 0; i < numberOfBlock; i++){
             System.out.print("Enter size of block " + (i + 1) + ": ");
             int size = sc.nextInt();
-            MemoryBlock block = new MemoryBlock(size);
-            blocks.add(block);
+            blocks.add(new MemoryBlock(size));
         }
 
+        //nhập thông tin cho các tiến trình
         System.out.print("Enter number of process: ");
         int numberOfProcess = sc.nextInt();
         for(int i = 0; i < numberOfProcess; i++){
@@ -82,6 +90,7 @@ public class AllocateMemoryAlgorithm {
 
     }
 
+    //hiển thị danh sách kết quả cho từng tiến trình với tham số là tên giải thuật
     public void printOutputs(String kindOfAllocate){
         System.out.println("--- " + kindOfAllocate + ":");
         for (String mess : outputs) {
@@ -90,6 +99,7 @@ public class AllocateMemoryAlgorithm {
         outputs.clear();
     }
 
+    //thực hiện giải thuật First-Fit
     public void allocateFirstFit(){
         List<MemoryBlock> blocksHandle = copyListBlocks();
         for(int i = 0; i < processes.size(); i++){
@@ -109,10 +119,12 @@ public class AllocateMemoryAlgorithm {
                     "Process " + (i + 1) + "(" + process + "KB) be not located"
                 );
         }
+        //hiển thị thông tin kết quả
         printOutputs("First-Fit");
     }
 
 
+    //thực hiện giải thuật Best-Fit
     public void allocateBestFit(){
         List<MemoryBlock> blocksHandle = copyListBlocks();
         for(int i = 0; i < processes.size(); i++){
@@ -135,9 +147,11 @@ public class AllocateMemoryAlgorithm {
                         "Process " + (i + 1) + "(" + process + "KB) be not located"
                     );
         }
+        //hiển thị thông tin kết quả
         printOutputs("Best-Fit");
     }
 
+    //thực hiện giải thuật Worst-Fit
     public void allocateWorstFit(){
         List<MemoryBlock> blocksHandle = copyListBlocks();
         for(int i = 0; i < processes.size(); i++){
@@ -160,14 +174,19 @@ public class AllocateMemoryAlgorithm {
                         "Process " + (i + 1) + "(" + process + "KB) be not located"
                     );
         }
+        //hiển thị thông tin kết quả
         printOutputs("Worst-Fit");
     }
 
 
     public static void main(String[] args) {
+
+        //tạo đối tượng chứa thông tin của các phân vùng và tiến trình
         AllocateMemoryAlgorithm allocator = new AllocateMemoryAlgorithm();
+        //nhập thông tin cho đối tượng
         allocator.enter();
 
+        //lần lượt thực hiện các giải thuật
         allocator.allocateFirstFit();
         allocator.allocateBestFit();
         allocator.allocateWorstFit();
